@@ -1,5 +1,5 @@
 import { clerkClient } from "@clerk/nextjs";
-import { User } from "@clerk/nextjs/dist/types/server";
+import type { User } from "@clerk/nextjs/dist/types/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
@@ -23,6 +23,7 @@ export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
       take: 100,
+      orderBy: [{ createdAt: "desc" }],
     });
     // on promise we will go through the list and get only parameters we need in filterUserForClient in function we created above
     const users = (
