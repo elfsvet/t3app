@@ -100,12 +100,12 @@ export default function Home() {
       </Head>
       <main className="flex h-screen justify-center">
         <div className="w-full border-x border-slate-400 md:max-w-2xl">
+          <div className="flex justify-end">
+            <UserButton afterSignOutUrl="/" />
+          </div>
           <div className="border-b border-slate-400 p-4">
             <div className="flex justify-center">
               {!user ? <SignInButton /> : <CreatePostWizard />}
-            </div>
-            <div className="flex justify-center">
-              <UserButton afterSignOutUrl="/" />
             </div>
           </div>
           <Feed />
