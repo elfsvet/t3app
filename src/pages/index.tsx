@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import type { RouterOutputs } from "~/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { LoadingPage } from "~/components/loading";
 // to create from now from local time
 dayjs.extend(relativeTime);
 
@@ -15,17 +16,16 @@ const PostView = (props: PostWithUser) => {
   const { post, author } = props;
   return (
     <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
-      <Image
-        src={author.profileImageUrl}
-        width={48}
-        height={48}
-        alt="Profile name"
-        className="rounded-full"
-      />
-      <div
-        className="
-      flex flex-col"
-      >
+      <div>
+        <Image
+          src={author.profileImageUrl}
+          width={48}
+          height={48}
+          alt="Profile name"
+          className="rounded-full"
+        />
+      </div>
+      <div className="flex flex-col">
         <div className="flex gap-1 text-slate-300">
           <span>{`@${author.username}`}</span>
           <span className="font-thin">{`· ${dayjs(
@@ -76,7 +76,7 @@ const CreatePostWizard = () => {
 const Feed = () => {
   const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
 
-  // if (postsLoading) return <LoadingPage />;
+  if (postsLoading) return <LoadingPage />;
   if (!data) return <div className="">No Data</div>;
 
   return (
@@ -89,7 +89,9 @@ const Feed = () => {
 };
 
 export default function Home() {
-  const user = useUser();
+  const { user, isLoaded: userLoaded } = useUser();
+
+  if (!userLoaded) return <div />;
 
   return (
     <>
