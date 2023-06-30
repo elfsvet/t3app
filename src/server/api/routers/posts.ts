@@ -46,6 +46,15 @@ const addUserDataToPosts = async (posts: Post[]) => {
 
 // create router helps to create a router
 export const postsRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findUnique({
+        where: { id: input.id },
+      });
+      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
+      return (await addUserDataToPosts([post]))[0];
+    }),
   // publicProcedure a method to generate the function your client calls. Everyone who not  authenticated can call it
   // getAll should be public to everyone see the posts on the open page without sign in
   getAll: publicProcedure.query(async ({ ctx }) => {
